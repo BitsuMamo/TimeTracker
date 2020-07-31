@@ -1,34 +1,54 @@
-#TODO: Add json parsing and logic
-#TODO: Add a filter to eliminate unessecary windows eg: New Tab, TaskManager...
-#TODO: Add filter to check if same app with different windows
-# dataHolder just temp till I know Json
-from FilterList import FilterList as Fl
-from win32gui import GetWindowText, GetForegroundWindow
+import win32gui
 import time
+import json
 from datetime import datetime
 
-class WindowTracker(object):
+activity_name = ''
+active_window_name =''
+activity_list = []
+new_user = True
+hour = datetime.now().hour * 3600
+minitue = datetime.now().minute* 60
+sec = datetime.now().second
 
-    def __init__(self, browserList, dataHolder, delayTime):
-        self.browserList = browserList
-        self.dataHolder = dataHolder
-        self.delayTime = delayTime
+start_time = hour + minitue + sec
+def get_active_window():
+    window = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+    return window
 
-    def checkIfBrowser(self, window):
-        for browser in self.browserList:
-            if window.endswith(browser):
-                window = window.split('-')
-                return window[-2]
-        return window
-    def run(self):
-        while True:
-            activeWindow = GetWindowText(GetForegroundWindow())
-            activeWindow = self.checkIfBrowser(activeWindow)
-            self.dataHolder[activeWindow] = datetime.now().second
-            print(self.dataHolder)
-            time.sleep(self.delayTime)
+current_window = get_active_window()
+
+while True:
+    exists = False
+    active_window_name = get_active_window()
+    for activity in activity_list:
+        activity_name = activity['name']
+        if active_window_name == activity_name:
+            exists = True
+
+    if active_window_name != current_window:
+        hour = datetime.now().hour* 3600
+        minute = datetime.now().minute* 60
+        sec = datetime.now().second
 
 
-dataHolder = {}
-w = WindowTracker(Fl.browsers, dataHolder, 1)
-w.run()
+        end_time = hour + minitue +sec
+        usage = end_time - start_time
+
+        if not exists:
+            activity_list.append({'name' : current_window, 'usage' : usage})
+        else:
+            # some erros here and there with the data collection.
+            # other than that can finally collect data
+            for activity in activity_list:
+                if activity['name'] == current_window:
+                    activity['usage'] = activity['usage'] + usage
+
+        current_window = active_window_name
+        start_time = hour + minute + sec
+
+
+
+    print(activity_list)
+    time.sleep(1)
+
