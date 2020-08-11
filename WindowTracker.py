@@ -1,54 +1,45 @@
+# TODO: Add json parsing and storing.
+
+# Imports
 import win32gui
 import time
-import json
-from datetime import datetime
+import datetime
 
-activity_name = ''
-active_window_name =''
+# Function to get the current window
+def get_active_winodw():
+    return win32gui.GetWindowText(win32gui.GetForegroundWindow())
+
+# Varibale intitializations
+current_window = get_active_winodw()
 activity_list = []
-new_user = True
-hour = datetime.now().hour * 3600
-minitue = datetime.now().minute* 60
-sec = datetime.now().second
 
-start_time = hour + minitue + sec
-def get_active_window():
-    window = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-    return window
-
-current_window = get_active_window()
-
+# Main Code
 while True:
+
     exists = False
-    active_window_name = get_active_window()
-    for activity in activity_list:
-        activity_name = activity['name']
-        if active_window_name == activity_name:
-            exists = True
+    activity = {}
 
-    if active_window_name != current_window:
-        hour = datetime.now().hour* 3600
-        minute = datetime.now().minute* 60
-        sec = datetime.now().second
+    # Intializes list if it is empty or first time.
+    if len(activity_list) == 0:
+        activity = {'name': current_window, 'usage': 1}
 
+    if current_window != get_active_winodw():
+        # TODO: Add something to track time with.
 
-        end_time = hour + minitue +sec
-        usage = end_time - start_time
-
-        if not exists:
-            activity_list.append({'name' : current_window, 'usage' : usage})
+        # This checks if the activity exists
+        for activities in activity_list:
+            if activities['name'] == current_window:
+                    exists = True
+        # Adds activities to the list
+        if exists:
+            for activities in activity_list:
+                if activities['name'] == current_window:
+                        activities['usage'] = activities['usage'] + 1
         else:
-            # some erros here and there with the data collection.
-            # other than that can finally collect data
-            for activity in activity_list:
-                if activity['name'] == current_window:
-                    activity['usage'] = activity['usage'] + usage
+            activity = {'name': current_window, 'usage': 1}
+            activity_list.append(activity)
 
-        current_window = active_window_name
-        start_time = hour + minute + sec
-
-
+        current_window = get_active_winodw()
 
     print(activity_list)
-    time.sleep(1)
-
+    time.sleep(2)
