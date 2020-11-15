@@ -3,11 +3,27 @@ from datetime import datetime
 from time import sleep
 
 def get_app_name():
-    return win32gui.GetWindowText(win32gui.GetForegroundWindow())
+    app_name = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+    app_name = app_name.split('-')
 
-def correct_app_name(app_name):
+    # Striping spaces of the ends of the strings
+    for index in range(len(app_name)):
+        app_name[index] = app_name[index].strip()
 
-    return None
+    web_browsers = ['Google Chrome', 'Mozilla Firefox']
+    exceptions = []
+    if app_name[len(app_name) - 1] not in exceptions:
+        if app_name[len(app_name) - 1] in web_browsers:
+            if 'Google Search' in app_name:
+                app_name = 'Google Search'
+            else:
+                app_name = app_name[0].strip()
+        else:
+            app_name = app_name[0]
+    else:
+        app_name = ''
+
+    return app_name
 
 # {date:{name:time}}
 
@@ -52,6 +68,5 @@ while True:
     app_activity_list[current_date] = current_date_activity
 
 
-    # sleep(5)
 
 
