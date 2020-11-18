@@ -32,6 +32,7 @@ current_date_activity = {}
 current_app_name = get_app_name()
 start_time = datetime.now()
 
+
 while True:
     date_exists = False
     app_name_exists = False
@@ -66,6 +67,7 @@ while True:
 
 
     app_activity_list[current_date] = current_date_activity
+    save_to_json(app_activity_list, current_date)
 
 
 
