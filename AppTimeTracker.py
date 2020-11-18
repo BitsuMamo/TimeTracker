@@ -7,24 +7,17 @@ def get_app_name():
     app_name = app_name.split('-')
 
     # Striping spaces of the ends of the strings
-    for index in range(len(app_name)):
-        app_name[index] = app_name[index].strip()
+    app_name = [name.strip() for name in app_name]
 
     web_browsers = ['Google Chrome', 'Mozilla Firefox']
     exceptions = []
-    if app_name[len(app_name) - 1] not in exceptions:
-        if app_name[len(app_name) - 1] in web_browsers:
-            if 'Google Search' in app_name:
-                app_name = 'Google Search'
-            else:
-                app_name = app_name[0].strip()
-        else:
-            app_name = app_name[0]
+    app = app_name[len(app_name) - 1]
+    if app in exceptions:
+        return ''
+    if app in web_browsers and 'Google Search' in app_name:
+        return 'Google Search'
     else:
-        app_name = ''
-
-    return app_name
-
+       return app_name[0].strip()
 # {date:{name:time}}
 
 app_activity_list = {}
@@ -34,41 +27,20 @@ start_time = datetime.now()
 
 
 while True:
-    date_exists = False
-    app_name_exists = False
     current_date = datetime.now().date()
     active_app_name = get_app_name()
-    end_time = None
-
-    if current_date in app_activity_list:
-        date_exists = True
-
-    if date_exists:
-        current_date_activity = app_activity_list[current_date]
-
-    if not date_exists:
-        current_date_activity = {}
+    current_date_activity = app_activity_list[current_date] if current_date in app_activity_list else {}
 
     if active_app_name != current_app_name and active_app_name != "":
         end_time = datetime.now()
-
         if current_app_name in current_date_activity:
-            app_name_exists = True
-
-        if app_name_exists:
             current_date_activity[current_app_name] = current_date_activity[current_app_name] + (end_time - start_time)
         else:
             current_date_activity[current_app_name] = end_time - start_time
 
-        print(current_app_name + ": " + str(current_date_activity[current_app_name]))
+        print(f"{current_app_name} : {str(current_date_activity[current_app_name])}")
         print("============================================================================================")
         current_app_name = active_app_name
         start_time = end_time
 
-
     app_activity_list[current_date] = current_date_activity
-    save_to_json(app_activity_list, current_date)
-
-
-
-
