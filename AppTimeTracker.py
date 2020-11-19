@@ -12,13 +12,33 @@ def get_app_name():
     web_browsers = ['Google Chrome', 'Mozilla Firefox']
     exceptions = []
     app = app_name[len(app_name) - 1]
+
     if app in exceptions:
         return ''
-    if app in web_browsers and 'Google Search' in app_name:
-        return 'Google Search'
-    else:
-       return app_name[0].strip()
+
+    if app in web_browsers:
+        return get_name_from_browser(app_name)
+
+    return app_name[len(app_name) -1]
+
+    #return win32gui.GetWindowText(win32gui.GetForegroundWindow())
 # {date:{name:time}}
+
+# Gets a more accurate name of a tab
+def get_name_from_browser(app_name: list):
+    exceptions = ['New Tab']
+    for exception in exceptions:
+        if exception in app_name:
+            return ''
+
+    if 'Google Search' in app_name:
+        return 'Google Search'
+
+    if len(app_name) < 3:
+        return app_name[0]
+
+    return app_name[len(app_name) - 2]
+
 
 app_activity_list = {}
 current_date_activity = {}
