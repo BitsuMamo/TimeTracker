@@ -1,4 +1,6 @@
 import win32gui
+import win32con
+
 from datetime import datetime
 from time import sleep
 
@@ -7,23 +9,33 @@ def get_app_name():
     app_name = app_name.split('-')
 
     # Striping spaces of the ends of the strings
-    for index in range(len(app_name)):
-        app_name[index] = app_name[index].strip()
+    app_name = [name.strip() for name in app_name]
 
     web_browsers = ['Google Chrome', 'Mozilla Firefox']
     exceptions = []
-    if app_name[len(app_name) - 1] not in exceptions:
-        if app_name[len(app_name) - 1] in web_browsers:
-            if ' Google Search ' in app_name:
-                app_name = 'Google Search'
-            else:
-                app_name = app_name[0].strip()
-        else:
-            app_name = app_name[0]
-    else:
-        app_name = ''
+    app = app_name[len(app_name) - 1]
 
-    return app_name
+    if app in exceptions:
+        return ''
+    if app in web_browsers:
+        return get_name_from_browser(app_name)
+    else:
+       return app_name[0].strip()
+
+# {date:{name:time}}
+
+# Gets a more accurate form of the tab name
+def get_name_from_browser(app_name: list):
+    exceptions = ['New Tab']
+    for exception in exceptions:
+        if exception in app_name:
+            return ''
+
+    if 'Google Search' in app_name:
+        return 'Google Search'
+
+    return app_name[len(app_name) - 2]
+
 
 while True:
     print(get_app_name())
