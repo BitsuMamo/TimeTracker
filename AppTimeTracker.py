@@ -22,10 +22,8 @@ def get_app_name():
 
     return app_name[len(app_name) -1]
 
-    #return win32gui.GetWindowText(win32gui.GetForegroundWindow())
-# {date:{name:time}}
 
-# Gets a more accurate name of a tab
+# Filters name that come from browsers 
 def get_name_from_browser(app_name: list):
     exceptions = ['New Tab']
     for exception in exceptions:
@@ -59,16 +57,13 @@ while True:
         else:
             current_date_activity[current_app_name] = (end_time - start_time).total_seconds()
 
-        #print(f"{current_app_name} : {str(current_date_activity[current_app_name])}")
-        #print("============================================================================================")
         current_app_name = active_app_name
         start_time = end_time
 
     app_activity_list[current_date] = current_date_activity
 
     b = datetime.now()
-    if((b-a).total_seconds() >10):
-        break
+    if((b-a).total_seconds() > 5):
+        serializer.save_to_file(app_activity_list)
+        a = b
 
-serializer.save_to_file(app_activity_list)
-serializer.list_apps_on_file()
