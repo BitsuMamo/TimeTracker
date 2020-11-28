@@ -8,10 +8,22 @@ FILE_NAME = 'data.json'
 DATE_FORMAT = '%Y-%m-%d'
 
 def save_to_file(data_to_save: dict)->None:
+    previous_data = load_from_file()
     formatted_data = {}
     for date in data_to_save:
-        activites = data_to_save[date]
-        formatted_data[datetime.strftime(date, DATE_FORMAT)] = activites
+        if date not in previous_data:
+            activites = data_to_save[date]
+            formatted_data[datetime.strftime(date, DATE_FORMAT)] = activites
+        else:
+            activites = data_to_save[date]
+            previous_activites = previous_data[date]
+
+            for activity in activites:
+                if activity in previous_activites:
+                    activites[activity] = activites[activity] + previous_activites[activity]
+
+            formatted_data[datetime.strftime(date, DATE_FORMAT)] = activites
+
     with open(FILE_NAME, 'w') as f:
         json.dump(formatted_data, f, indent=2)
 

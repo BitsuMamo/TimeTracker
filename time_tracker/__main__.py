@@ -41,7 +41,7 @@ def get_name_from_browser(app_name: list) -> str:
 
 def track_activity() -> None:
     # Initializations and Variable decalrations
-    app_activity_list = serializer.load_from_file()
+    app_activity_list = {}
     current_app_name = get_app_name()
     start_time = datetime.now()
     active_app_name = None
@@ -69,8 +69,11 @@ def track_activity() -> None:
 
                 current_app_name = active_app_name
                 start_time = end_time
-            
+
+            app_activity_list[current_date] = current_date_activity
+
     except KeyboardInterrupt:
+
         # Logging last application to be active
         end_time = datetime.now()
         if active_app_name in current_date_activity:
@@ -86,6 +89,7 @@ def track_activity() -> None:
         # File saving
         app_activity_list[current_date] = current_date_activity
         serializer.save_to_file(app_activity_list)
+        serializer.list_apps_on_file()
         print("Saving and exiting")
 
 
