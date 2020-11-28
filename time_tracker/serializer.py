@@ -28,12 +28,7 @@ def load_from_file()->Dict:
         print('File doesn\'t exist.')
     return formatted_data
 
-<<<<<<< HEAD:serializer.py
-# This function is for debugging puropses
-def list_apps_on_file():
-=======
 def list_apps_on_file()->None:
->>>>>>> b5338bdbe7d4a3feebbeffb8b418a9c13a39bbc2:time_tracker/serializer.py
     with open(FILE_NAME) as f:
         data = json.load(f)
     for item in data:
