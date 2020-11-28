@@ -33,6 +33,7 @@ def load_from_file():
 
     return formatted_data
 
+# This function is for debugging puropses
 def list_apps_on_file():
     with open(FILE_NAME) as f:
         data = json.load(f)

@@ -42,7 +42,7 @@ def get_name_from_browser(app_name: list):
 app_activity_list = serializer.load_from_file()
 current_app_name = get_app_name()
 start_time = datetime.now()
-a = datetime.now()
+save_time_start = datetime.now()
 
 while True:
     current_date = datetime.now().date()
@@ -62,8 +62,10 @@ while True:
 
     app_activity_list[current_date] = current_date_activity
 
-    b = datetime.now()
-    if((b-a).total_seconds() > 5):
+    save_time_end = datetime.now()
+    # Saves to file every 5 seconds
+    if((save_time_end-save_time_start).total_seconds() > 5):
         serializer.save_to_file(app_activity_list)
-        a = b
+        serializer.list_apps_on_file()
+        save_time_start = save_time_end
 
