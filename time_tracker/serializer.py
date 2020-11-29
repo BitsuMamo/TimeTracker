@@ -28,7 +28,7 @@ def get_db_cursor() -> Cursor:
     return m_db_con.cursor()
 
 
-def commit():
+def commit() -> None:
     global m_db_con
     m_db_con.commit()
 
@@ -62,7 +62,7 @@ def save_to_db(activity_data: List[Tuple[str, datetime, datetime]]) -> None:
     commit()
 
 
-DB_VALUE_TYPE = Tuple[str, str, int, int, int, str, str, int, int, int, str]
+DB_VALUE_TYPE = Tuple[str, str, str,  int, int, int, str,int, int, int, str]
 
 
 def generate_values(entry: Tuple[str, datetime, datetime]) -> DB_VALUE_TYPE:
@@ -84,14 +84,10 @@ def generate_values(entry: Tuple[str, datetime, datetime]) -> DB_VALUE_TYPE:
     )
 
 
-# Returns all the acitvites logged in the database
+# Returns all theacitvites logged in the database
 def get_all_data() -> List[Tuple[str, datetime, datetime]]:
     conn = get_db_cursor()
-    data = conn.execute(
+    return conn.execute(
         "SELECT * FROM activities ORDER BY start_date_iso ASC"
     ).fetchall()
-    return [
-        (entry[0], datetime.fromisoformat(entry[1]), datetime.fromisoformat(entry[2]))
-        for entry in data
-    ]
 

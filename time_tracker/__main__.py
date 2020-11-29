@@ -1,13 +1,13 @@
 from win32 import win32gui
 from datetime import datetime
 from time import sleep
-from typing import Dict, List, Tuple
+from typing import Optional, List, Tuple
 
 from . import serializer
 
 
 def get_app_name() -> str:
-    app_name = win32gui.GetWindowText(win32gui.GetForegroundWindow()).split("-")
+    app_name:List[str] = win32gui.GetWindowText(win32gui.GetForegroundWindow()).split("-")
     app_name = [name.strip() for name in app_name]
     web_browsers = ["Google Chrome", "Mozilla Firefox"]
     app = app_name[len(app_name) - 1]
@@ -18,7 +18,7 @@ def get_app_name() -> str:
     return app_name[len(app_name) - 1]
 
 # Checks if the site is a social media site, returns none if not
-def get_name_from_browser(app_name: list) -> str:
+def get_name_from_browser(app_name: list) -> Optional[str]:
     social_media = ["Reddit", "Twitter", "Facebook", "Instagram"]
     for site in social_media:
         if site.lower() in [entry.lower() for entry in app_name]:
