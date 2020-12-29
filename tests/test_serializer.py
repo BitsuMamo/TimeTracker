@@ -1,5 +1,5 @@
 from datetime import datetime
-from time_tracker.serializer import AppDB
+from time_tracker.db import AppDB
 import sqlite3
 
 sample_data = [
