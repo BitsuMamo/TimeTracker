@@ -24,7 +24,7 @@ class AppTracker(Thread):
         self.listeners.append(func)
 
     def notify_listeners(self) -> None:
-        if self.current_app != None:
+        if self.current_app is not None:
             for func in self.listeners:
                 func(self.current_app, datetime.now().isoformat())
 
@@ -59,4 +59,3 @@ class AppTracker(Thread):
                 self.current_app_start_time = datetime.now().isoformat()
                 self.notify_listeners()
             sleep(1)
-

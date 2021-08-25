@@ -52,8 +52,8 @@ class Activity:
             earliest_date=earliest_cutoff, latest_date=latest_cutoff
         )
 
-    def get_activity_by_app_and_date(self, app: str) -> List[Record]:
-        return self.db.get_data_by_app(app)
+    # def get_activity_by_app_and_date(self, app: str) -> List[Record]:
+        # return self.db.get_data_by_app(app)
 
     def get_activity_by_app_and_date(
         self,
@@ -64,4 +64,3 @@ class Activity:
         return self.db.get_data_by_app_and_date(
             app, earliest_date=earliest_date, latest_date=latest_date
         )
-

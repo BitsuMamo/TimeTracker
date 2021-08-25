@@ -10,7 +10,7 @@ DB_VALUE_TYPE = Tuple[str, str, str, int, int, int, str, int, int, int, str]
 
 
 class AppDB:
-    # Prefixed with 'm' to show it's a global variable
+    # Prefixed with '_' to show it's a global variable
     _con: Optional[Connection] = None
 
     # Dependency Injection. Used for testing
@@ -55,7 +55,8 @@ class AppDB:
         COMMAND = "INSERT INTO activities VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)"
         conn = self.get_db_cursor()
         if isinstance(activity_data, list):
-            formatted_data = [self.record_to_db_type(entry) for entry in activity_data]
+            formatted_data = [self.record_to_db_type(
+                entry) for entry in activity_data]
             conn.executemany(
                 COMMAND, formatted_data,
             )
@@ -105,9 +106,9 @@ class AppDB:
             elif earliest_date:
                 my_command = my_command + GREATER_THAN + "?"
         return my_command
-    
 
     # Helps buidls the overall SQL command
+
     def base_command(self, additional: Optional[str] = None) -> str:
         if additional:
             return (
@@ -131,7 +132,8 @@ class AppDB:
     def get_data_by_date(
         self, *, earliest_date: Optional[str] = None, latest_date: Optional[str] = None
     ) -> List[Record]:
-        my_command = self.base_command(self.date_filtering(earliest_date, latest_date))
+        my_command = self.base_command(
+            self.date_filtering(earliest_date, latest_date))
         conn = self.get_db_cursor()
         print(my_command)
         if earliest_date and latest_date:
@@ -172,5 +174,3 @@ class AppDB:
         else:
             cursor = conn.execute(my_command)
         return [self.db_to_record(db_entry) for db_entry in cursor.fetchall()]
-
-
